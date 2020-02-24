@@ -4,7 +4,7 @@ import * as Express from "express"
 import { buildSchema } from "type-graphql"
 import {createConnection} from "typeorm"
 import { InvoiceResolver } from "./resolvers/InvoiceResolver"
-import { ApprovalResolver } from "./resolvers/ApprovalResolver"
+// import { ApprovalResolver } from "./resolvers/ApprovalResolver"
  
 
 const main = async ()=> {
@@ -12,7 +12,7 @@ const main = async ()=> {
     const schema = await buildSchema({
         resolvers: [
             InvoiceResolver, 
-            ApprovalResolver
+            // ApprovalResolver
         ] 
     })
     const apolloServer = new ApolloServer({schema})

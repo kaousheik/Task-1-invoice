@@ -4,7 +4,7 @@ import { Invoice } from "../entities/Invoice";
 import { SubmitInvoiceInput } from "./inputs/SubmitInvoiceInput";
 import { InvoiceType } from "../entities/enums/InvoiceType.enum"
 import { ApprovalStatus } from "../entities/enums/ApprovalStatus.enum"
-
+// import {} from "pg"
 @Resolver(Invoice)
 export class InvoiceResolver {
     @Query(() => [Invoice])
@@ -63,13 +63,27 @@ export class InvoiceResolver {
         return invoice
     }
 
+    @Mutation(() => Invoice)
+    async resubmitInvoice(
+      @Arg("data") data: SubmitInvoiceInput,
+      @Arg("_id", () => Int) _id: Number
+    ): Promise<Invoice> {
+      const invoice = await Invoice.findOne({
+        where: {_id}
+      })
+      const inv = Object.assign(invoice, data)
+      await inv.save()
+      return inv
+    }
 
     // @Mutation(() => Invoice)
     // async approveInvoice(@Arg("invoiceId") invoiceId: String): Promise<Invoice> {
-
-    //   const approval = Approval.create({
-
+    //   const invoice = await Invoice.findOne({
+    //     where: {_id: invoiceId}
     //   })
-
+    //   const approval = 
+    //   return
     // }
 }
+
+
