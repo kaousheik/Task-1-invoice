@@ -73,6 +73,7 @@ export class InvoiceResolver {
       })
       console.log(invoice)
       const inv = Object.assign(invoice, data)
+      inv.approvals = []
       await inv.save()
       return inv
     }
@@ -93,7 +94,18 @@ export class InvoiceResolver {
       }).save()
       const inv = Object.assign(invoice || [])
       inv.approvals.push(approval)
-      inv.save()
+      await inv.save()
+      return inv
+    }
+
+    @Mutation(() => Invoice, {nullable: true})
+    async rejectInvoice(@Arg("invoiceId", () => Int) invoiceId: Number): Promise<Invoice> {
+      const invoice = await Invoice.findOne({
+        where: { _id: invoiceId}
+      })
+      const inv = Object.assign(invoice || [])
+      inv.approvals = []
+      await inv.save()
       return inv
     }
 }

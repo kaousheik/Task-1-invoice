@@ -1,15 +1,12 @@
-import { Entity, BaseEntity, Column, PrimaryGeneratedColumn,ManyToOne  } from "typeorm";
-import { ObjectType, Field, ID } from "type-graphql";
+import { Entity, BaseEntity, Column, PrimaryColumn, ManyToOne } from "typeorm";
+import { ObjectType, Field } from "type-graphql";
 import { Invoice } from "./Invoice";
 
 @ObjectType()
 @Entity()
 export class Approval extends BaseEntity {
-    @PrimaryGeneratedColumn()
-    @Field(() => ID)
-    readonly _id: number
     
-    @Column()
+    @PrimaryColumn()
     @Field()
     approverName: string
 
