@@ -1,10 +1,9 @@
 import { Resolver, Query, Mutation, Arg, Int } from "type-graphql";
 import { Invoice } from "../entities/Invoice";
-// import {Approval} from "../entities/Approval"
+import { Approval } from "../entities/Approval"
 import { SubmitInvoiceInput } from "./inputs/SubmitInvoiceInput";
 import { InvoiceType } from "../entities/enums/InvoiceType.enum"
 import { ApprovalStatus } from "../entities/enums/ApprovalStatus.enum"
-// import {} from "pg"
 @Resolver(Invoice)
 export class InvoiceResolver {
     @Query(() => [Invoice])
@@ -69,21 +68,34 @@ export class InvoiceResolver {
       @Arg("_id", () => Int) _id: Number
     ): Promise<Invoice> {
       const invoice = await Invoice.findOne({
-        where: {_id}
+        where: {_id},
+        relations: ["approvals"]
       })
+      console.log(invoice)
       const inv = Object.assign(invoice, data)
       await inv.save()
       return inv
     }
 
-    // @Mutation(() => Invoice)
-    // async approveInvoice(@Arg("invoiceId") invoiceId: String): Promise<Invoice> {
-    //   const invoice = await Invoice.findOne({
-    //     where: {_id: invoiceId}
-    //   })
-    //   const approval = 
-    //   return
-    // }
+    @Mutation(() => Invoice)
+    async approveInvoice(@Arg("invoiceId", () => Int) invoiceId: Number): Promise<Invoice> {
+      const invoice = await Invoice.findOne({
+        where: {_id: invoiceId},
+        relations: ["approvals"],
+      })
+      const approval = await Approval.create({
+        approverName: "me",
+        approverAvatar: "emoji",
+        approverAccessLevel: "coord",
+        approvedOn: "today",
+        approverEmail: "me@123.com",
+        approverMobile: "12345678",
+      }).save()
+      const inv = Object.assign(invoice || [])
+      inv.approvals.push(approval)
+      inv.save()
+      return inv
+    }
 }
 
 

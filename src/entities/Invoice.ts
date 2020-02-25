@@ -1,5 +1,5 @@
-import { ObjectType, Field, Int } from "type-graphql";
-import { Entity, BaseEntity, PrimaryGeneratedColumn, Column, OneToMany } from "typeorm";
+import { ObjectType, Field,} from "type-graphql";
+import { Entity, BaseEntity,  Column, OneToMany, PrimaryColumn } from "typeorm";
 import { Approval } from "./Approval"
 import { ApprovalStatus } from "./enums/ApprovalStatus.enum";
 import { InvoiceType } from "./enums/InvoiceType.enum"
@@ -7,12 +7,8 @@ import { InvoiceType } from "./enums/InvoiceType.enum"
 @ObjectType()
 @Entity()
 export class Invoice extends BaseEntity {
-    @Field(() => Int)
-    @PrimaryGeneratedColumn()
-    _id: number;
-
     @Field()
-    @Column()
+    @PrimaryColumn()
     title: string;
 
     @Column()
@@ -73,5 +69,5 @@ export class Invoice extends BaseEntity {
 
     @Field(() => [Approval], {nullable: true})
     @OneToMany(() => Approval, approval => approval.invoice)
-    approvals?: Approval[]
+    approvals: Approval[]
 }
